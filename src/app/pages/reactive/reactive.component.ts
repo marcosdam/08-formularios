@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-reactive',
@@ -17,6 +17,18 @@ export class ReactiveComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  get nombreNoValido(){
+    return this.forma.get('nombre').invalid && this.forma.get('nombre').touched
+  }
+
+  get apellidoNoValido(){
+    return this.forma.get('apellido').invalid && this.forma.get('apellido').touched
+  }
+
+  get emailNoValido(){
+    return this.forma.get('email').invalid && this.forma.get('email').touched
+  }
+
   crearFormulario(){
     this.forma = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(5)] ],
@@ -26,7 +38,13 @@ export class ReactiveComponent implements OnInit {
   }
 
   guardar(){
-    console.log( this.forma );
+
+    if ( this.forma.invalid ){
+
+      return Object.values( this.forma.controls ).forEach( control => {
+        control.markAsTouched();
+      } );
+    }
   }
 
 }
